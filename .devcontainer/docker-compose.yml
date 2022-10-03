@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  dev-with-terraform:
+    container_name: "devcontainer"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VARIANT=focal
+    environment:
+      - LOCALSTACK_HOST=host.docker.internal
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"  
+  
+  localstack:
+    container_name: "localstack_main"
+    image: localstack/localstack
+    ports:
+      - "127.0.0.1:4566:4566"            # LocalStack Gateway
+      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+      - "127.0.0.1:443:443"  # external services port range
+    environment:
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack
+      - LAMBDA_EXECUTOR=docker-reuse
+      - HOST_TMP_FOLDER=${PWD}/.localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
