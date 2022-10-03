@@ -17,6 +17,8 @@ The top section of the terraform script located in `tf-build/sample-build.tf` in
 - Lambda Function
 - DynamoDB Table
 
+# Python
+The python source code for the lambda function is in `lambda_functions/lambda.py`. If you make any changes to this code to explore your options, be sure you rerun `deploy.sh` from the `tf-build` directory so that it will make a new zip of the file and terraform will update your lambda funcion
 
 # Starting up the stack
 The `tf-build` directory contains the sample terraform configuration file and a deploy.sh script. In order to run your localstack environment, after the dev container is running in your terminal navigate to the `tf-build` directory and run the `deploy.sh` script. 
@@ -61,7 +63,9 @@ aws_lambda_permission.apigw_lambda: Creation complete after 1s [id=AllowExecutio
 ```
 
 In the above example, the relevant line is with the id of `iqrsz5bz1x`
-> aws_api_gateway_rest_api.sample_api: Creation complete after 0s [id=**iqrsz5bz1x**]
+```
+aws_api_gateway_rest_api.sample_api: Creation complete after 0s [id=iqrsz5bz1x]
+```
 
 API Gateway uses a convention for accessing all rest routes, and in turn all lambda functions behind them. In a real deployment you would use a DNS service (like AWS Route 53) to hide this path from the users, but for localstack testing you will need to string together the url using the id above. The URL format is
 
